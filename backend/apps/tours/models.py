@@ -1,3 +1,4 @@
+from decimal import Decimal
 from django.db import models
 from apps.destinations.models import Destination
 
@@ -53,7 +54,7 @@ class Tour(models.Model):
     @property
     def discounted_price(self):
         if self.discount_percent:
-            return self.price_per_person * (1 - self.discount_percent / 100)
+            return self.price_per_person * (1 - Decimal(self.discount_percent) / 100)
         return self.price_per_person
 
     @property
