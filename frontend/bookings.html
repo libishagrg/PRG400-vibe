@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Trips — WanderLust</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="bg-gray-50">
+
+  <div id="nav-container"></div>
+
+  <section class="hero-gradient pt-32 pb-12 text-center">
+    <h1 class="text-4xl md:text-5xl font-extrabold text-white mb-3">My Trips</h1>
+    <p class="text-white/80">Manage your upcoming and past adventures</p>
+  </section>
+
+  <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 page-enter">
+    <div id="bookings-list" class="space-y-6">
+      <div class="skeleton h-32"></div>
+      <div class="skeleton h-32"></div>
+    </div>
+  </main>
+
+  <footer class="bg-gray-900 text-gray-400 py-8 text-center text-sm">
+    <span class="text-white font-bold mr-2">✈️ WanderLust</span> © 2026 · All rights reserved.
+  </footer>
+
+  <div id="modal-root"></div>
+  <script src="/js/api.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/components.js"></script>
+  <script>
+    document.getElementById('nav-container').innerHTML = injectNav('/bookings.html');
+    injectAuthModal();
+
+    if (!auth.isLoggedIn()) {
+      window.location.href = '/';
+    }
+    updateNav();
+
+    const statusColors = {
+      pending: 'bg-yellow-100 text-yellow-700',
+      confirmed: 'bg-emerald-100 text-emerald-700',
+      cancelled: 'bg-red-100 text-red-600',
+      completed: 'bg-gray-100 text-gray-600',
+    };
+
+    async function loadBookings() {
+      const list = document.getElementById('bookings-list');
+      const bookings = await api.getMyBookings();
+
+      if (!bookings.length) {
+        list.innerHTML = `
+          <div class="text-center py-24">
+            <div class="text-6xl mb-4">🗺️</div>
+            <h2 class="text-2xl font-bold text-gray-700 mb-2">No trips yet!</h2>
+            <p class="text-gray-400 mb-6">Your booked adventures will appear here.</p>
+            <a href="/tours.html" class="bg-emerald-500 hover:bg-emerald-600 text-white px-6 py-3 rounded-xl font-semibold transition">Explore Tours</a>
+          </div>`;
+        return;
+      }
+
+      list.innerHTML = bookings.map(b => {
+        const t = b.tour_detail || {};
+        const date = b.tour_date
+          ? new Date(b.tour_date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
+          : 'Date TBD';
+        const canCancel = b.status === 'pending' || b.status === 'confirmed';
+        return `
+        <div class="bg-white rounded-2xl shadow-md overflow-hidden flex flex-col sm:flex-row" id="booking-${b.id}">
+          <img src="${t.image_url || 'https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=400'}"
+               alt="${t.title}" class="w-full sm:w-48 h-40 sm:h-auto object-cover flex-shrink-0">
+          <div class="p-6 flex-1 flex flex-col justify-between">
+            <div>
+              <div class="flex items-start justify-between gap-3 mb-2">
+                <h3 class="font-bold text-gray-800 text-lg leading-tight">${t.title || 'Tour'}</h3>
+                <span class="px-3 py-1 rounded-full text-xs font-semibold whitespace-nowrap ${statusColors[b.status] || 'bg-gray-100 text-gray-600'}">
+                  ${b.status.charAt(0).toUpperCase() + b.status.slice(1)}
+                </span>
+              </div>
+              <p class="text-gray-500 text-sm mb-3">📍 ${t.destination_name || ''}, ${t.destination_country || ''}</p>
+              <div class="flex flex-wrap gap-4 text-sm text-gray-600">
+                <span>📅 ${date}</span>
+                <span>👥 ${b.number_of_travelers} traveler${b.number_of_travelers > 1 ? 's' : ''}</span>
+                <span>💰 $${parseFloat(b.total_price).toLocaleString()}</span>
+              </div>
+              ${b.special_requests ? `<p class="text-xs text-gray-400 mt-2 italic">Note: ${b.special_requests}</p>` : ''}
+            </div>
+            <div class="flex gap-3 mt-4">
+              <a href="/tour.html?id=${b.tour}" class="text-emerald-600 font-medium text-sm hover:underline">View Tour →</a>
+              ${canCancel
+                ? `<button onclick="cancelBooking(${b.id})" class="text-red-500 font-medium text-sm hover:underline ml-auto">Cancel Booking</button>`
+                : ''}
+            </div>
+          </div>
+        </div>`;
+      }).join('');
+    }
+
+    async function cancelBooking(id) {
+      if (!confirm('Are you sure you want to cancel this booking?')) return;
+      const res = await api.cancelBooking(id);
+      if (res && res.ok) {
+        showToast('Booking cancelled.');
+        loadBookings();
+      } else {
+        showToast('Could not cancel booking.', 'error');
+      }
+    }
+
+    loadBookings();
+  </script>
+</body>
+</html>

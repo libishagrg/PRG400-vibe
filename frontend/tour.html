@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tour Detail — WanderLust</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="bg-gray-50">
+
+  <div id="nav-container"></div>
+
+  <main id="content" class="pt-16">
+    <!-- Loaded by JS -->
+    <div class="skeleton h-96 w-full"></div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div class="skeleton h-10 w-1/2 mb-4"></div>
+      <div class="skeleton h-6 w-1/3 mb-8"></div>
+      <div class="skeleton h-40 w-full"></div>
+    </div>
+  </main>
+
+  <!-- Booking modal -->
+  <div id="booking-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/60 backdrop-blur-sm">
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 p-8 relative">
+      <button onclick="closeBookingModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-2xl">&times;</button>
+      <h3 class="text-2xl font-bold text-gray-800 mb-6">Book This Tour</h3>
+      <form onsubmit="handleBooking(event)">
+        <div class="mb-4">
+          <label class="block text-sm font-medium text-gray-700 mb-1">Select Date</label>
+          <select id="book-date" required class="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-emerald-400 bg-white"></select>
+        </div>
+        <div class="mb-4">
+          <label class="block text-sm font-medium text-gray-700 mb-1">Number of Travelers</label>
+          <input id="book-travelers" type="number" min="1" max="20" value="1" required
+            class="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-emerald-400">
+        </div>
+        <div class="mb-4">
+          <label class="block text-sm font-medium text-gray-700 mb-1">Special Requests (optional)</label>
+          <textarea id="book-requests" rows="3" class="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-emerald-400" placeholder="Dietary requirements, accessibility needs…"></textarea>
+        </div>
+        <div class="bg-emerald-50 rounded-xl p-4 mb-6">
+          <div class="flex justify-between text-sm text-gray-600 mb-1">
+            <span>Price per person</span><span id="modal-price-pp">-</span>
+          </div>
+          <div class="flex justify-between font-bold text-gray-800">
+            <span>Total</span><span id="modal-total">-</span>
+          </div>
+        </div>
+        <div id="book-error" class="text-red-500 text-sm mb-3 hidden"></div>
+        <button type="submit" class="w-full bg-emerald-500 hover:bg-emerald-600 text-white py-3 rounded-xl font-semibold transition">Confirm Booking</button>
+      </form>
+    </div>
+  </div>
+
+  <div id="modal-root"></div>
+  <script src="/js/api.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/components.js"></script>
+  <script>
+    document.getElementById('nav-container').innerHTML = injectNav('/tours.html');
+    injectAuthModal();
+    updateNav();
+
+    const params = new URLSearchParams(window.location.search);
+    const tourId = params.get('id');
+    let currentTour = null;
+    let tourDates = [];
+
+    function onLoginSuccess() { openBookingModal(); }
+
+    async function loadTour() {
+      if (!tourId) { window.location.href = '/tours.html'; return; }
+      const [tour, dates, reviewsData] = await Promise.all([
+        api.getTour(tourId),
+        api.getTourDates(tourId),
+        api.getReviews(tourId),
+      ]);
+      if (!tour) { document.getElementById('content').innerHTML = '<p class="text-center py-32 text-gray-400 text-xl">Tour not found.</p>'; return; }
+      currentTour = tour;
+      tourDates = dates;
+      document.title = `${tour.title} — WanderLust`;
+      renderTour(tour, dates, reviewsData.results || []);
+    }
+
+    function renderTour(t, dates, reviews) {
+      const price = t.discount_percent
+        ? `<span class="line-through text-gray-400 text-2xl">${formatPrice(t.price_per_person)}</span>
+           <span class="text-emerald-600 font-extrabold text-4xl ml-2">${formatPrice(t.discounted_price)}</span>`
+        : `<span class="text-emerald-600 font-extrabold text-4xl">${formatPrice(t.price_per_person)}</span>`;
+
+      document.getElementById('content').innerHTML = `
+        <!-- Hero image -->
+        <div class="relative h-96 md:h-[480px] overflow-hidden">
+          <img src="${t.image_url || 'https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=1200'}"
+               alt="${t.title}" class="w-full h-full object-cover">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
+          <div class="absolute bottom-8 left-8 text-white">
+            <div class="flex gap-2 mb-2">
+              <span class="bg-white/20 backdrop-blur-sm px-3 py-1 rounded-full text-sm">${categoryIcon(t.category)} ${t.category_display}</span>
+              ${difficultyBadge(t.difficulty)}
+            </div>
+            <h1 class="text-3xl md:text-5xl font-extrabold">${t.title}</h1>
+            <p class="text-white/80 mt-2">📍 ${t.destination_detail?.name}, ${t.destination_detail?.country}</p>
+          </div>
+          <a href="/tours.html" class="absolute top-6 left-6 bg-black/40 hover:bg-black/60 text-white px-4 py-2 rounded-full text-sm transition">← Back</a>
+        </div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 page-enter">
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
+
+            <!-- Left: Details -->
+            <div class="lg:col-span-2 space-y-8">
+
+              <!-- Quick stats -->
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                <div class="bg-white rounded-2xl p-4 text-center shadow-sm">
+                  <div class="text-3xl mb-1">📅</div>
+                  <div class="font-bold text-gray-800">${t.duration_days} days</div>
+                  <div class="text-xs text-gray-400">Duration</div>
+                </div>
+                <div class="bg-white rounded-2xl p-4 text-center shadow-sm">
+                  <div class="text-3xl mb-1">👥</div>
+                  <div class="font-bold text-gray-800">Max ${t.max_group_size}</div>
+                  <div class="text-xs text-gray-400">Group size</div>
+                </div>
+                <div class="bg-white rounded-2xl p-4 text-center shadow-sm">
+                  <div class="text-3xl mb-1">🎂</div>
+                  <div class="font-bold text-gray-800">${t.min_age > 0 ? t.min_age + '+' : 'All ages'}</div>
+                  <div class="text-xs text-gray-400">Min age</div>
+                </div>
+                <div class="bg-white rounded-2xl p-4 text-center shadow-sm">
+                  <div class="flex justify-center mb-1">${stars(t.rating)}</div>
+                  <div class="font-bold text-gray-800">${parseFloat(t.rating).toFixed(1)}</div>
+                  <div class="text-xs text-gray-400">${t.total_reviews} reviews</div>
+                </div>
+              </div>
+
+              <!-- Description -->
+              <div class="bg-white rounded-2xl p-6 shadow-sm">
+                <h2 class="text-xl font-bold text-gray-800 mb-3">About this tour</h2>
+                <p class="text-gray-600 leading-relaxed">${t.description}</p>
+              </div>
+
+              <!-- Itinerary -->
+              ${t.itinerary ? `
+              <div class="bg-white rounded-2xl p-6 shadow-sm">
+                <h2 class="text-xl font-bold text-gray-800 mb-4">Itinerary</h2>
+                <div class="space-y-3">
+                  ${t.itinerary.split('\n').map((line, i) => line.trim()
+                    ? `<div class="flex gap-3 items-start">
+                         <span class="bg-emerald-100 text-emerald-700 text-xs font-bold px-2 py-1 rounded-full whitespace-nowrap mt-0.5">Day ${i+1}</span>
+                         <p class="text-gray-600">${line.replace(/^Day \d+:?\s*/i, '')}</p>
+                       </div>`
+                    : '').join('')}
+                </div>
+              </div>` : ''}
+
+              <!-- Includes / Excludes -->
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                ${t.includes_list && t.includes_list.length ? `
+                <div class="bg-white rounded-2xl p-6 shadow-sm">
+                  <h3 class="font-bold text-gray-800 mb-3">✅ Included</h3>
+                  <ul class="space-y-2">${t.includes_list.map(i => `<li class="text-gray-600 text-sm flex gap-2"><span class="text-emerald-500">✓</span>${i}</li>`).join('')}</ul>
+                </div>` : ''}
+                ${t.excludes_list && t.excludes_list.length ? `
+                <div class="bg-white rounded-2xl p-6 shadow-sm">
+                  <h3 class="font-bold text-gray-800 mb-3">❌ Not Included</h3>
+                  <ul class="space-y-2">${t.excludes_list.map(i => `<li class="text-gray-600 text-sm flex gap-2"><span class="text-red-400">✗</span>${i}</li>`).join('')}</ul>
+                </div>` : ''}
+              </div>
+
+              <!-- Reviews -->
+              <div class="bg-white rounded-2xl p-6 shadow-sm">
+                <div class="flex items-center justify-between mb-6">
+                  <h2 class="text-xl font-bold text-gray-800">Reviews (${reviews.length})</h2>
+                  ${auth.isLoggedIn()
+                    ? `<button onclick="document.getElementById('review-form').classList.toggle('hidden')" class="text-emerald-600 font-semibold text-sm hover:underline">+ Write a review</button>`
+                    : `<button onclick="openModal('login')" class="text-emerald-600 font-semibold text-sm hover:underline">Login to review</button>`}
+                </div>
+                <!-- Review form -->
+                <form id="review-form" onsubmit="submitReview(event)" class="hidden mb-8 bg-emerald-50 rounded-xl p-5 space-y-3">
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Rating</label>
+                    <select id="rev-rating" required class="border border-gray-200 rounded-xl px-3 py-2 bg-white">
+                      <option value="5">★★★★★ (5)</option>
+                      <option value="4">★★★★☆ (4)</option>
+                      <option value="3">★★★☆☆ (3)</option>
+                      <option value="2">★★☆☆☆ (2)</option>
+                      <option value="1">★☆☆☆☆ (1)</option>
+                    </select>
+                  </div>
+                  <div>
+                    <input id="rev-title" type="text" required placeholder="Review title" class="w-full border border-gray-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-emerald-400">
+                  </div>
+                  <div>
+                    <textarea id="rev-body" required rows="3" placeholder="Share your experience…" class="w-full border border-gray-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-emerald-400"></textarea>
+                  </div>
+                  <button type="submit" class="bg-emerald-500 hover:bg-emerald-600 text-white px-6 py-2 rounded-xl font-semibold transition">Submit Review</button>
+                </form>
+                <!-- Review list -->
+                <div class="space-y-5">
+                  ${reviews.length
+                    ? reviews.map(r => `
+                      <div class="border-b border-gray-100 pb-5 last:border-0">
+                        <div class="flex items-center justify-between mb-1">
+                          <span class="font-semibold text-gray-800">${r.user_name}</span>
+                          <div class="flex items-center gap-1">${stars(r.rating)}</div>
+                        </div>
+                        <p class="font-medium text-gray-700 mb-1">${r.title}</p>
+                        <p class="text-gray-500 text-sm">${r.body}</p>
+                        <span class="text-xs text-gray-400">${new Date(r.created_at).toLocaleDateString()}</span>
+                      </div>`).join('')
+                    : '<p class="text-gray-400 text-center py-6">No reviews yet. Be the first!</p>'}
+                </div>
+              </div>
+            </div>
+
+            <!-- Right: Booking card (sticky) -->
+            <div class="lg:col-span-1">
+              <div class="bg-white rounded-2xl shadow-lg p-6 sticky top-24">
+                <div class="mb-4">
+                  ${price}
+                  <span class="text-gray-400 text-sm">/person</span>
+                </div>
+                ${t.discount_percent ? `<div class="bg-red-50 text-red-600 text-sm font-semibold px-3 py-1.5 rounded-lg mb-4">🔥 ${t.discount_percent}% discount applied</div>` : ''}
+
+                <div class="space-y-2 text-sm text-gray-600 mb-6 border-t border-b border-gray-100 py-4">
+                  <div class="flex justify-between"><span>Duration</span><strong>${t.duration_days} days</strong></div>
+                  <div class="flex justify-between"><span>Group size</span><strong>Max ${t.max_group_size}</strong></div>
+                  <div class="flex justify-between"><span>Difficulty</span><strong>${t.difficulty}</strong></div>
+                  <div class="flex justify-between"><span>Available dates</span><strong>${dates.filter(d => d.available_spots > 0).length} upcoming</strong></div>
+                </div>
+
+                <button onclick="bookNow()" class="w-full bg-emerald-500 hover:bg-emerald-600 text-white py-3 rounded-xl font-bold transition text-lg">
+                  Book Now
+                </button>
+                <p class="text-center text-xs text-gray-400 mt-3">Free cancellation up to 72 hours before</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function bookNow() {
+      requireAuth(() => openBookingModal());
+    }
+
+    function openBookingModal() {
+      const available = tourDates.filter(d => d.is_active && d.available_spots > 0);
+      const sel = document.getElementById('book-date');
+      if (!available.length) {
+        showToast('No available dates for this tour.', 'error'); return;
+      }
+      sel.innerHTML = available.map(d =>
+        `<option value="${d.id}">${new Date(d.start_date).toLocaleDateString('en-US', {month:'long',day:'numeric',year:'numeric'})} — ${d.available_spots} spots left</option>`
+      ).join('');
+      updateBookingTotal();
+      document.getElementById('booking-modal').classList.remove('hidden');
+      document.getElementById('booking-modal').classList.add('flex');
+    }
+
+    function closeBookingModal() {
+      document.getElementById('booking-modal').classList.add('hidden');
+      document.getElementById('booking-modal').classList.remove('flex');
+    }
+
+    function updateBookingTotal() {
+      if (!currentTour) return;
+      const travelers = parseInt(document.getElementById('book-travelers').value) || 1;
+      const price = parseFloat(currentTour.discounted_price || currentTour.price_per_person);
+      document.getElementById('modal-price-pp').textContent = formatPrice(price);
+      document.getElementById('modal-total').textContent = formatPrice(price * travelers);
+    }
+
+    document.getElementById('book-travelers').addEventListener('input', updateBookingTotal);
+
+    async function handleBooking(e) {
+      e.preventDefault();
+      const btn = e.target.querySelector('button[type=submit]');
+      btn.disabled = true; btn.textContent = 'Booking…';
+      const errEl = document.getElementById('book-error');
+      errEl.classList.add('hidden');
+      const res = await api.createBooking({
+        tour: parseInt(tourId),
+        tour_date: parseInt(document.getElementById('book-date').value),
+        number_of_travelers: parseInt(document.getElementById('book-travelers').value),
+        special_requests: document.getElementById('book-requests').value,
+      });
+      if (res && res.ok) {
+        closeBookingModal();
+        showToast('🎉 Booking confirmed! Check My Trips.');
+        setTimeout(() => window.location.href = '/bookings.html', 2000);
+      } else {
+        const data = await res.json();
+        errEl.textContent = data.detail || Object.values(data).flat().join(' ') || 'Booking failed.';
+        errEl.classList.remove('hidden');
+      }
+      btn.disabled = false; btn.textContent = 'Confirm Booking';
+    }
+
+    async function submitReview(e) {
+      e.preventDefault();
+      const res = await api.createReview({
+        tour: parseInt(tourId),
+        rating: parseInt(document.getElementById('rev-rating').value),
+        title: document.getElementById('rev-title').value,
+        body: document.getElementById('rev-body').value,
+      });
+      if (res && res.ok) {
+        showToast('Review submitted!');
+        loadTour();
+      } else {
+        const d = await res.json();
+        showToast(Object.values(d).flat().join(' ') || 'Could not submit review.', 'error');
+      }
+    }
+
+    loadTour();
+  </script>
+</body>
+</html>

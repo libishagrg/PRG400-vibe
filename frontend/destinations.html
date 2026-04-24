@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Destinations — WanderLust</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="bg-gray-50">
+
+  <div id="nav-container"></div>
+
+  <!-- Hero -->
+  <section class="hero-gradient pt-32 pb-16 text-center">
+    <h1 class="text-4xl md:text-6xl font-extrabold text-white mb-4">Explore Destinations</h1>
+    <p class="text-white/80 text-lg max-w-xl mx-auto">From iconic landmarks to hidden gems — discover where you want to go next.</p>
+  </section>
+
+  <!-- Filters -->
+  <section class="bg-white shadow-sm sticky top-16 z-30">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col sm:flex-row gap-4">
+      <input id="search-input" type="text" placeholder="🔍  Search destinations…"
+        class="flex-1 border border-gray-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-emerald-400">
+      <select id="continent-filter" class="border border-gray-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-emerald-400 bg-white">
+        <option value="">All Continents</option>
+        <option value="AF">Africa</option>
+        <option value="AS">Asia</option>
+        <option value="EU">Europe</option>
+        <option value="NA">North America</option>
+        <option value="SA">South America</option>
+        <option value="OC">Oceania</option>
+      </select>
+      <button onclick="applyFilters()" class="bg-emerald-500 hover:bg-emerald-600 text-white px-6 py-2.5 rounded-xl font-semibold transition">Apply</button>
+    </div>
+  </section>
+
+  <!-- Grid -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 page-enter">
+    <div id="result-count" class="text-gray-500 text-sm mb-6"></div>
+    <div id="grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div class="skeleton h-64"></div><div class="skeleton h-64"></div><div class="skeleton h-64"></div>
+      <div class="skeleton h-64"></div><div class="skeleton h-64"></div><div class="skeleton h-64"></div>
+    </div>
+    <div id="pagination" class="flex justify-center gap-3 mt-12"></div>
+  </main>
+
+  <footer class="bg-gray-900 text-gray-400 py-8 text-center text-sm">
+    <span class="text-white font-bold mr-2">✈️ WanderLust</span> © 2026 · All rights reserved.
+  </footer>
+
+  <div id="modal-root"></div>
+  <script src="/js/api.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/components.js"></script>
+  <script>
+    document.getElementById('nav-container').innerHTML = injectNav('/destinations.html');
+    injectAuthModal();
+    updateNav();
+
+    let currentPage = 1;
+
+    function getParams() {
+      const p = new URLSearchParams();
+      const s = document.getElementById('search-input').value.trim();
+      const c = document.getElementById('continent-filter').value;
+      if (s) p.set('search', s);
+      if (c) p.set('continent', c);
+      p.set('page', currentPage);
+      return p.toString();
+    }
+
+    async function loadDestinations() {
+      const grid = document.getElementById('grid');
+      grid.innerHTML = '<div class="skeleton h-64 col-span-3"></div>';
+      const data = await api.getDestinations(getParams());
+      const items = data.results || [];
+      document.getElementById('result-count').textContent =
+        `${data.count || items.length} destination${(data.count || items.length) !== 1 ? 's' : ''} found`;
+      grid.innerHTML = items.length
+        ? items.map(destinationCard).join('')
+        : '<p class="text-gray-400 col-span-3 py-20 text-center text-lg">No destinations found.</p>';
+      renderPagination(data.count, data.next, data.previous);
+    }
+
+    function renderPagination(count, next, prev) {
+      const el = document.getElementById('pagination');
+      el.innerHTML = '';
+      if (prev) {
+        const b = document.createElement('button');
+        b.textContent = '← Previous';
+        b.className = 'px-5 py-2 bg-white border border-gray-200 rounded-xl hover:bg-emerald-50 text-emerald-600 font-medium transition';
+        b.onclick = () => { currentPage--; loadDestinations(); };
+        el.appendChild(b);
+      }
+      if (next) {
+        const b = document.createElement('button');
+        b.textContent = 'Next →';
+        b.className = 'px-5 py-2 bg-emerald-500 text-white rounded-xl hover:bg-emerald-600 font-medium transition';
+        b.onclick = () => { currentPage++; loadDestinations(); };
+        el.appendChild(b);
+      }
+    }
+
+    function applyFilters() { currentPage = 1; loadDestinations(); }
+
+    document.getElementById('search-input').addEventListener('keydown', e => {
+      if (e.key === 'Enter') applyFilters();
+    });
+
+    loadDestinations();
+  </script>
+</body>
+</html>

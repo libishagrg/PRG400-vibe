@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tours — WanderLust</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="bg-gray-50">
+
+  <div id="nav-container"></div>
+
+  <!-- Hero -->
+  <section class="hero-gradient pt-32 pb-16 text-center">
+    <h1 class="text-4xl md:text-6xl font-extrabold text-white mb-4">All Tours</h1>
+    <p class="text-white/80 text-lg max-w-xl mx-auto">Find the perfect trip — filter by category, price, and destination.</p>
+  </section>
+
+  <!-- Filters bar -->
+  <section class="bg-white shadow-sm sticky top-16 z-30">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col sm:flex-row gap-3 flex-wrap">
+      <input id="search-input" type="text" placeholder="🔍  Search tours…"
+        class="flex-1 min-w-[200px] border border-gray-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-emerald-400">
+      <select id="category-filter" class="border border-gray-200 rounded-xl px-4 py-2.5 bg-white focus:outline-none focus:ring-2 focus:ring-emerald-400">
+        <option value="">All Categories</option>
+        <option value="adventure">🧗 Adventure</option>
+        <option value="cultural">🏛️ Cultural</option>
+        <option value="wildlife">🦁 Wildlife</option>
+        <option value="beach">🏖️ Beach</option>
+        <option value="city">🏙️ City Tour</option>
+        <option value="food">🍜 Food & Culinary</option>
+        <option value="wellness">🧘 Wellness</option>
+      </select>
+      <select id="difficulty-filter" class="border border-gray-200 rounded-xl px-4 py-2.5 bg-white focus:outline-none focus:ring-2 focus:ring-emerald-400">
+        <option value="">Any Difficulty</option>
+        <option value="easy">Easy</option>
+        <option value="moderate">Moderate</option>
+        <option value="challenging">Challenging</option>
+        <option value="extreme">Extreme</option>
+      </select>
+      <select id="sort-filter" class="border border-gray-200 rounded-xl px-4 py-2.5 bg-white focus:outline-none focus:ring-2 focus:ring-emerald-400">
+        <option value="">Sort by</option>
+        <option value="price_per_person">Price ↑</option>
+        <option value="-price_per_person">Price ↓</option>
+        <option value="-rating">Top Rated</option>
+        <option value="duration_days">Duration ↑</option>
+      </select>
+      <button onclick="applyFilters()" class="bg-emerald-500 hover:bg-emerald-600 text-white px-6 py-2.5 rounded-xl font-semibold transition">Apply</button>
+    </div>
+  </section>
+
+  <!-- Grid -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 page-enter">
+    <div id="result-count" class="text-gray-500 text-sm mb-6"></div>
+    <div id="grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div class="skeleton h-80"></div><div class="skeleton h-80"></div><div class="skeleton h-80"></div>
+    </div>
+    <div id="pagination" class="flex justify-center gap-3 mt-12"></div>
+  </main>
+
+  <footer class="bg-gray-900 text-gray-400 py-8 text-center text-sm">
+    <span class="text-white font-bold mr-2">✈️ WanderLust</span> © 2026 · All rights reserved.
+  </footer>
+
+  <div id="modal-root"></div>
+  <script src="/js/api.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/components.js"></script>
+  <script>
+    document.getElementById('nav-container').innerHTML = injectNav('/tours.html');
+    injectAuthModal();
+    updateNav();
+
+    // Pre-fill from URL params (e.g. from destination card click)
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('search')) document.getElementById('search-input').value = urlParams.get('search');
+    if (urlParams.get('category')) document.getElementById('category-filter').value = urlParams.get('category');
+
+    let currentPage = 1;
+
+    function getParams() {
+      const p = new URLSearchParams();
+      const s = document.getElementById('search-input').value.trim();
+      const cat = document.getElementById('category-filter').value;
+      const diff = document.getElementById('difficulty-filter').value;
+      const sort = document.getElementById('sort-filter').value;
+      const dest = urlParams.get('destination');
+      if (s) p.set('search', s);
+      if (cat) p.set('category', cat);
+      if (diff) p.set('difficulty', diff);
+      if (sort) p.set('ordering', sort);
+      if (dest) p.set('destination', dest);
+      p.set('page', currentPage);
+      return p.toString();
+    }
+
+    async function loadTours() {
+      const grid = document.getElementById('grid');
+      grid.innerHTML = '<div class="skeleton h-80 col-span-3"></div>';
+      const data = await api.getTours(getParams());
+      const items = data.results || [];
+      document.getElementById('result-count').textContent =
+        `${data.count || items.length} tour${(data.count || items.length) !== 1 ? 's' : ''} found`;
+      grid.innerHTML = items.length
+        ? items.map(tourCard).join('')
+        : '<p class="text-gray-400 col-span-3 py-20 text-center text-lg">No tours found matching your filters.</p>';
+      renderPagination(data.next, data.previous);
+    }
+
+    function renderPagination(next, prev) {
+      const el = document.getElementById('pagination');
+      el.innerHTML = '';
+      if (prev) {
+        const b = document.createElement('button');
+        b.textContent = '← Previous';
+        b.className = 'px-5 py-2 bg-white border border-gray-200 rounded-xl hover:bg-emerald-50 text-emerald-600 font-medium transition';
+        b.onclick = () => { currentPage--; loadTours(); window.scrollTo(0,0); };
+        el.appendChild(b);
+      }
+      if (next) {
+        const b = document.createElement('button');
+        b.textContent = 'Next →';
+        b.className = 'px-5 py-2 bg-emerald-500 text-white rounded-xl hover:bg-emerald-600 font-medium transition';
+        b.onclick = () => { currentPage++; loadTours(); window.scrollTo(0,0); };
+        el.appendChild(b);
+      }
+    }
+
+    function applyFilters() { currentPage = 1; loadTours(); }
+
+    document.getElementById('search-input').addEventListener('keydown', e => {
+      if (e.key === 'Enter') applyFilters();
+    });
+
+    loadTours();
+  </script>
+</body>
+</html>

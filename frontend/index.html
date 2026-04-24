@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WanderLust — Discover the World</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="bg-gray-50">
+
+  <!-- Nav injected by JS -->
+  <div id="nav-container"></div>
+
+  <!-- Hero -->
+  <section class="hero-gradient min-h-screen flex items-center relative overflow-hidden">
+    <div class="absolute inset-0 opacity-10">
+      <div class="absolute top-20 left-10 w-72 h-72 bg-white rounded-full blur-3xl"></div>
+      <div class="absolute bottom-20 right-10 w-96 h-96 bg-emerald-300 rounded-full blur-3xl"></div>
+    </div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-16 relative z-10 w-full">
+      <div class="max-w-3xl">
+        <span class="inline-block bg-white/20 text-white text-sm font-medium px-4 py-1.5 rounded-full mb-6">✈️ 50+ Destinations Worldwide</span>
+        <h1 class="text-5xl md:text-7xl font-extrabold text-white leading-tight mb-6">
+          Your Next Adventure<br><span class="text-emerald-300">Starts Here</span>
+        </h1>
+        <p class="text-xl text-white/80 mb-10 leading-relaxed">
+          Discover hand-crafted travel experiences across the globe. From ancient temples to volcanic peaks — let us take you there.
+        </p>
+        <!-- Search bar -->
+        <form onsubmit="handleSearch(event)" class="flex flex-col sm:flex-row gap-3 max-w-2xl">
+          <input id="hero-search" type="text" placeholder="Search destinations or tours…"
+            class="flex-1 px-6 py-4 rounded-2xl text-gray-800 text-lg focus:outline-none focus:ring-4 focus:ring-emerald-300 shadow-lg">
+          <button type="submit" class="bg-emerald-400 hover:bg-emerald-300 text-white font-bold px-8 py-4 rounded-2xl transition shadow-lg whitespace-nowrap">
+            🔍 Search
+          </button>
+        </form>
+      </div>
+    </div>
+    <!-- Scroll indicator -->
+    <div class="absolute bottom-8 left-1/2 -translate-x-1/2 text-white/60 animate-bounce text-2xl">↓</div>
+  </section>
+
+  <!-- Stats -->
+  <section class="bg-white py-12 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+        <div><div class="text-4xl font-extrabold text-emerald-600">50+</div><div class="text-gray-500 mt-1">Destinations</div></div>
+        <div><div class="text-4xl font-extrabold text-emerald-600">200+</div><div class="text-gray-500 mt-1">Tours</div></div>
+        <div><div class="text-4xl font-extrabold text-emerald-600">10k+</div><div class="text-gray-500 mt-1">Happy Travelers</div></div>
+        <div><div class="text-4xl font-extrabold text-emerald-600">4.9★</div><div class="text-gray-500 mt-1">Average Rating</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Destinations -->
+  <section class="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between mb-10">
+      <div>
+        <h2 class="text-3xl md:text-4xl font-bold text-gray-900">Top Destinations</h2>
+        <p class="text-gray-500 mt-2">Explore our most-loved places on Earth</p>
+      </div>
+      <a href="/destinations.html" class="hidden md:inline-flex items-center gap-2 text-emerald-600 font-semibold hover:gap-3 transition-all">
+        View all <span>→</span>
+      </a>
+    </div>
+    <div id="destinations-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <!-- Skeletons -->
+      <div class="skeleton h-64"></div>
+      <div class="skeleton h-64"></div>
+      <div class="skeleton h-64"></div>
+    </div>
+    <a href="/destinations.html" class="mt-6 text-center block md:hidden text-emerald-600 font-semibold">View all destinations →</a>
+  </section>
+
+  <!-- Featured Tours -->
+  <section class="py-20 bg-gray-100">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between mb-10">
+        <div>
+          <h2 class="text-3xl md:text-4xl font-bold text-gray-900">Featured Tours</h2>
+          <p class="text-gray-500 mt-2">Expertly curated experiences you'll never forget</p>
+        </div>
+        <a href="/tours.html" class="hidden md:inline-flex items-center gap-2 text-emerald-600 font-semibold hover:gap-3 transition-all">
+          View all <span>→</span>
+        </a>
+      </div>
+      <div id="tours-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="skeleton h-80"></div>
+        <div class="skeleton h-80"></div>
+        <div class="skeleton h-80"></div>
+      </div>
+      <a href="/tours.html" class="mt-6 text-center block md:hidden text-emerald-600 font-semibold">View all tours →</a>
+    </div>
+  </section>
+
+  <!-- Why us -->
+  <section class="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <h2 class="text-3xl md:text-4xl font-bold text-center text-gray-900 mb-14">Why WanderLust?</h2>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+      <div class="text-center">
+        <div class="text-6xl mb-4">🧭</div>
+        <h3 class="text-xl font-bold text-gray-800 mb-2">Expert-Guided</h3>
+        <p class="text-gray-500">Local guides with deep knowledge who make every destination come alive.</p>
+      </div>
+      <div class="text-center">
+        <div class="text-6xl mb-4">🛡️</div>
+        <h3 class="text-xl font-bold text-gray-800 mb-2">Safe & Trusted</h3>
+        <p class="text-gray-500">Fully vetted partners, 24/7 support, and travel insurance options on every trip.</p>
+      </div>
+      <div class="text-center">
+        <div class="text-6xl mb-4">💰</div>
+        <h3 class="text-xl font-bold text-gray-800 mb-2">Best Price</h3>
+        <p class="text-gray-500">Transparent pricing with no hidden fees. Cancel for free up to 72 hours before.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="hero-gradient py-20">
+    <div class="max-w-3xl mx-auto text-center px-4">
+      <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">Ready to explore the world?</h2>
+      <p class="text-white/80 text-lg mb-8">Join thousands of happy travelers. Your dream trip is a click away.</p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="/tours.html" class="bg-white text-emerald-700 font-bold px-8 py-4 rounded-2xl hover:bg-emerald-50 transition shadow-lg">Browse Tours</a>
+        <button onclick="openModal('register')" class="border-2 border-white text-white font-bold px-8 py-4 rounded-2xl hover:bg-white/10 transition">Create Free Account</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-gray-900 text-gray-400 py-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-4">
+      <span class="text-white font-bold text-xl">✈️ WanderLust</span>
+      <p class="text-sm">© 2026 WanderLust. Built with ❤️ for travelers.</p>
+      <div class="flex gap-6 text-sm">
+        <a href="/destinations.html" class="hover:text-white transition">Destinations</a>
+        <a href="/tours.html" class="hover:text-white transition">Tours</a>
+        <a href="/api/docs/" target="_blank" class="hover:text-white transition">API Docs</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Auth Modal container -->
+  <div id="modal-root"></div>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/components.js"></script>
+  <script>
+    document.getElementById('nav-container').innerHTML = injectNav('/');
+    injectAuthModal();
+    updateNav();
+
+    function handleSearch(e) {
+      e.preventDefault();
+      const q = document.getElementById('hero-search').value.trim();
+      if (q) window.location.href = `/tours.html?search=${encodeURIComponent(q)}`;
+    }
+
+    async function loadHome() {
+      const [destinations, tours] = await Promise.all([
+        api.getFeaturedDestinations(),
+        api.getFeaturedTours(),
+      ]);
+
+      const dGrid = document.getElementById('destinations-grid');
+      if (destinations.length) {
+        dGrid.innerHTML = destinations.slice(0, 6).map(destinationCard).join('');
+      } else {
+        dGrid.innerHTML = '<p class="text-gray-400 col-span-3">No destinations found.</p>';
+      }
+
+      const tGrid = document.getElementById('tours-grid');
+      if (tours.length) {
+        tGrid.innerHTML = tours.slice(0, 6).map(tourCard).join('');
+      } else {
+        tGrid.innerHTML = '<p class="text-gray-400 col-span-3">No tours found.</p>';
+      }
+    }
+
+    loadHome();
+  </script>
+</body>
+</html>
