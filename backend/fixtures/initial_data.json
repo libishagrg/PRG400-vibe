@@ -1,0 +1,361 @@
+[
+  {
+    "model": "destinations.destination",
+    "pk": 1,
+    "fields": {
+      "name": "Bali",
+      "country": "Indonesia",
+      "continent": "AS",
+      "description": "Bali is a living postcard, an Indonesian paradise that feels like a fantasy. Soak up the sun on a stretch of beach, or commune with nature on a scenic hike. It's a place of lush rice terraces, volcanic mountains, ancient temples and an incredibly rich culture.",
+      "highlights": "Tanah Lot Temple,Ubud Rice Terraces,Mount Batur,Seminyak Beach,Monkey Forest",
+      "image_url": "https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=800",
+      "best_time_to_visit": "April to October (dry season)",
+      "language": "Balinese, Indonesian",
+      "currency": "Indonesian Rupiah (IDR)",
+      "timezone": "WITA (UTC+8)",
+      "latitude": "-8.340539",
+      "longitude": "115.091980",
+      "is_featured": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "destinations.destination",
+    "pk": 2,
+    "fields": {
+      "name": "Santorini",
+      "country": "Greece",
+      "continent": "EU",
+      "description": "Santorini is one of the Cyclades islands in the Aegean Sea. It was devastated by a volcanic eruption in the 16th century BC, forever shaping its rugged landscape. The whitewashed, cubiform houses of its two principal towns, Fira and Oia, cling to cliffs above an underwater caldera.",
+      "highlights": "Oia Sunset,Caldera Views,Akrotiri Archaeological Site,Black Sand Beaches,Wine Tasting",
+      "image_url": "https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?w=800",
+      "best_time_to_visit": "May to September",
+      "language": "Greek",
+      "currency": "Euro (EUR)",
+      "timezone": "EET (UTC+3)",
+      "latitude": "36.393155",
+      "longitude": "25.461509",
+      "is_featured": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "destinations.destination",
+    "pk": 3,
+    "fields": {
+      "name": "Machu Picchu",
+      "country": "Peru",
+      "continent": "SA",
+      "description": "Machu Picchu is an Incan citadel set high in the Andes Mountains in Peru, above the Urubamba River valley. Built in the 15th century and later abandoned, it's renowned for its sophisticated dry-stone walls that fuse huge blocks without the use of mortar.",
+      "highlights": "Sun Gate,Huayna Picchu,Inca Trail,Sacred Valley,Aguas Calientes",
+      "image_url": "https://images.unsplash.com/photo-1526392060635-9d6019884377?w=800",
+      "best_time_to_visit": "May to October (dry season)",
+      "language": "Spanish, Quechua",
+      "currency": "Peruvian Sol (PEN)",
+      "timezone": "PET (UTC-5)",
+      "latitude": "-13.163141",
+      "longitude": "-72.544963",
+      "is_featured": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "destinations.destination",
+    "pk": 4,
+    "fields": {
+      "name": "Tokyo",
+      "country": "Japan",
+      "continent": "AS",
+      "description": "Tokyo, Japan's busy capital, mixes the ultramodern and the traditional, from neon-lit skyscrapers to historic temples. The opulent Meiji Shinto Shrine is known for its towering gate and surrounding forest. The Imperial Palace sits amid large public gardens.",
+      "highlights": "Shibuya Crossing,Senso-ji Temple,Mount Fuji Day Trip,Tsukiji Fish Market,Akihabara",
+      "image_url": "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=800",
+      "best_time_to_visit": "March to May (cherry blossom) or September to November",
+      "language": "Japanese",
+      "currency": "Japanese Yen (JPY)",
+      "timezone": "JST (UTC+9)",
+      "latitude": "35.689487",
+      "longitude": "139.691711",
+      "is_featured": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "destinations.destination",
+    "pk": 5,
+    "fields": {
+      "name": "Safari in Serengeti",
+      "country": "Tanzania",
+      "continent": "AF",
+      "description": "The Serengeti National Park is a large national park in northern Tanzania that spans 14,750 km². It is famous for its annual wildebeest migration, where millions of animals traverse the plains from Tanzania's Serengeti to Kenya's Masai Mara.",
+      "highlights": "Great Migration,Big Five,Hot Air Balloon Safari,Ngorongoro Crater,Maasai Village",
+      "image_url": "https://images.unsplash.com/photo-1516426122078-c23e76319801?w=800",
+      "best_time_to_visit": "June to October (dry season and migration)",
+      "language": "Swahili, English",
+      "currency": "Tanzanian Shilling (TZS)",
+      "timezone": "EAT (UTC+3)",
+      "latitude": "-2.333333",
+      "longitude": "34.833333",
+      "is_featured": false,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "destinations.destination",
+    "pk": 6,
+    "fields": {
+      "name": "New York City",
+      "country": "United States",
+      "continent": "NA",
+      "description": "New York City comprises 5 boroughs sitting where the Hudson River meets the Atlantic Ocean. At its core is Manhattan, a densely populated borough that's among the world's major commercial, financial and cultural centers. Its iconic sites include skyscrapers such as the Empire State Building and sprawling Central Park.",
+      "highlights": "Central Park,Statue of Liberty,Times Square,Brooklyn Bridge,Metropolitan Museum",
+      "image_url": "https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?w=800",
+      "best_time_to_visit": "April to June or September to November",
+      "language": "English",
+      "currency": "US Dollar (USD)",
+      "timezone": "EST (UTC-5)",
+      "latitude": "40.712776",
+      "longitude": "-74.005974",
+      "is_featured": false,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "tours.tour",
+    "pk": 1,
+    "fields": {
+      "title": "Bali Cultural Heritage & Temples Tour",
+      "destination": 1,
+      "category": "cultural",
+      "difficulty": "easy",
+      "description": "Immerse yourself in the spiritual heart of Bali with visits to ancient temples, traditional villages, and UNESCO-listed rice terraces. Experience a Kecak fire dance performance and witness the iconic Tanah Lot sunset.",
+      "itinerary": "Day 1: Arrive in Denpasar, hotel check-in, welcome dinner\nDay 2: Ubud - Sacred Monkey Forest, Tegallalang Rice Terraces\nDay 3: Temple Tour - Besakih Mother Temple, Kehen Temple\nDay 4: Tanah Lot Sunset, Seminyak Beach\nDay 5: Cooking class, spa treatment, departure",
+      "duration_days": 5,
+      "max_group_size": 12,
+      "min_age": 5,
+      "price_per_person": "899.00",
+      "discount_percent": 10,
+      "image_url": "https://images.unsplash.com/photo-1555400038-63f5ba517a47?w=800",
+      "includes": "4-star accommodation,Daily breakfast,Airport transfers,Expert guide,Temple entrance fees,Kecak dance show",
+      "excludes": "International flights,Travel insurance,Personal expenses,Lunch and dinner",
+      "is_active": true,
+      "is_featured": true,
+      "rating": "0.00",
+      "total_reviews": 0,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "tours.tour",
+    "pk": 2,
+    "fields": {
+      "title": "Bali Volcano & Adventure Trekking",
+      "destination": 1,
+      "category": "adventure",
+      "difficulty": "challenging",
+      "description": "Conquer Mount Batur at sunrise, explore hidden waterfalls, and white-water raft through jungle gorges. This action-packed tour combines Bali's dramatic volcanic landscapes with thrilling outdoor adventures.",
+      "itinerary": "Day 1: Arrival, gear briefing\nDay 2: Mount Batur sunrise trek (4am start)\nDay 3: Gitgit Waterfall hike, afternoon rafting\nDay 4: ATV ride through rice fields, cliff jump\nDay 5: Relaxation day, optional surfing lesson, departure",
+      "duration_days": 5,
+      "max_group_size": 8,
+      "min_age": 16,
+      "price_per_person": "1199.00",
+      "discount_percent": 0,
+      "image_url": "https://images.unsplash.com/photo-1604999565976-8913ad2ddb7c?w=800",
+      "includes": "Accommodation,Breakfast daily,Trekking guide,Safety equipment,White-water rafting",
+      "excludes": "International flights,Travel insurance,Alcoholic beverages",
+      "is_active": true,
+      "is_featured": true,
+      "rating": "0.00",
+      "total_reviews": 0,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "tours.tour",
+    "pk": 3,
+    "fields": {
+      "title": "Santorini Sunset & Wine Experience",
+      "destination": 2,
+      "category": "cultural",
+      "difficulty": "easy",
+      "description": "Fall in love with Santorini's iconic blue-domed churches, volcanic beaches, and world-renowned sunsets. Sip local Assyrtiko wine, explore ancient Akrotiri, and sail the caldera on a traditional wooden boat.",
+      "itinerary": "Day 1: Arrive Fira, sunset walk\nDay 2: Oia village, sunset viewing\nDay 3: Caldera sailing tour, swimming stops\nDay 4: Akrotiri excavations, wine tasting at volcanic winery\nDay 5: Red Beach, departure",
+      "duration_days": 5,
+      "max_group_size": 10,
+      "min_age": 0,
+      "price_per_person": "1499.00",
+      "discount_percent": 5,
+      "image_url": "https://images.unsplash.com/photo-1533104816931-20fa691ff6ca?w=800",
+      "includes": "Boutique hotel (cave suite),Daily breakfast,Caldera sailing tour,Wine tasting,Airport transfers",
+      "excludes": "International flights,Travel insurance,Most meals",
+      "is_active": true,
+      "is_featured": true,
+      "rating": "0.00",
+      "total_reviews": 0,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "tours.tour",
+    "pk": 4,
+    "fields": {
+      "title": "Classic Inca Trail to Machu Picchu",
+      "destination": 3,
+      "category": "adventure",
+      "difficulty": "challenging",
+      "description": "Trek the legendary Inca Trail through cloud forests and high mountain passes to reach the mystical citadel of Machu Picchu at sunrise. One of the world's most iconic hiking experiences, this 4-day trek follows the original Incan route.",
+      "itinerary": "Day 1: Cusco acclimatization, Sacred Valley tour\nDay 2: Inca Trail start (KM82), camp at Ayapata\nDay 3: Dead Woman's Pass (4,215m), Pacaymayo camp\nDay 4: Sun Gate, Machu Picchu citadel tour\nDay 5: Return to Cusco, farewell dinner",
+      "duration_days": 5,
+      "max_group_size": 16,
+      "min_age": 14,
+      "price_per_person": "1350.00",
+      "discount_percent": 0,
+      "image_url": "https://images.unsplash.com/photo-1587595431973-160d0d94add1?w=800",
+      "includes": "Inca Trail permit,Camping equipment,Cook and guide,Train return,Machu Picchu entrance",
+      "excludes": "International flights,Travel insurance,Sleeping bag,Trekking poles",
+      "is_active": true,
+      "is_featured": true,
+      "rating": "0.00",
+      "total_reviews": 0,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "tours.tour",
+    "pk": 5,
+    "fields": {
+      "title": "Tokyo: Modern Japan & Ancient Traditions",
+      "destination": 4,
+      "category": "city",
+      "difficulty": "easy",
+      "description": "Experience the electrifying contrast of futuristic Tokyo and Japan's ancient traditions. From the neon-soaked streets of Shibuya to the serene gardens of the Imperial Palace, discover why Tokyo is one of the world's most fascinating cities.",
+      "itinerary": "Day 1: Arrival, Shibuya Crossing at night\nDay 2: Senso-ji Temple, Asakusa, Akihabara\nDay 3: Harajuku, Meiji Shrine, Shinjuku\nDay 4: Tsukiji Market, Odaiba, teamLab Planets\nDay 5: Day trip to Nikko or Kamakura\nDay 6: Imperial Palace, Ginza, departure",
+      "duration_days": 6,
+      "max_group_size": 14,
+      "min_age": 0,
+      "price_per_person": "2199.00",
+      "discount_percent": 15,
+      "image_url": "https://images.unsplash.com/photo-1513407030348-c983a97b98d8?w=800",
+      "includes": "4-star hotel,JR Pass (7 days),Airport transfers,Local guide,teamLab Planets tickets",
+      "excludes": "International flights,Most meals,Travel insurance",
+      "is_active": true,
+      "is_featured": true,
+      "rating": "0.00",
+      "total_reviews": 0,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "tours.tour",
+    "pk": 6,
+    "fields": {
+      "title": "Serengeti Great Migration Safari",
+      "destination": 5,
+      "category": "wildlife",
+      "difficulty": "easy",
+      "description": "Witness the greatest wildlife spectacle on Earth — the Great Migration of over 1.5 million wildebeest and zebra across the Serengeti plains. Game drives at dawn and dusk offer incredible predator-prey encounters in their natural habitat.",
+      "itinerary": "Day 1: Fly to Arusha, camp briefing\nDay 2-3: Central Serengeti, predator game drives\nDay 4: Northern Serengeti, migration river crossing\nDay 5: Ngorongoro Crater full-day tour\nDay 6: Maasai village visit, depart Arusha\nDay 7: Return home",
+      "duration_days": 7,
+      "max_group_size": 6,
+      "min_age": 8,
+      "price_per_person": "3499.00",
+      "discount_percent": 0,
+      "image_url": "https://images.unsplash.com/photo-1547970810-dc1eac37d174?w=800",
+      "includes": "Luxury tented camp,All meals,Game drives (4x4),Park fees,Ngorongoro fees,Internal flights",
+      "excludes": "International flights,Visa,Travel insurance,Tips",
+      "is_active": true,
+      "is_featured": false,
+      "rating": "0.00",
+      "total_reviews": 0,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "tours.tourdate",
+    "pk": 1,
+    "fields": {
+      "tour": 1,
+      "start_date": "2026-05-15",
+      "end_date": "2026-05-20",
+      "available_spots": 10,
+      "is_active": true
+    }
+  },
+  {
+    "model": "tours.tourdate",
+    "pk": 2,
+    "fields": {
+      "tour": 1,
+      "start_date": "2026-06-10",
+      "end_date": "2026-06-15",
+      "available_spots": 12,
+      "is_active": true
+    }
+  },
+  {
+    "model": "tours.tourdate",
+    "pk": 3,
+    "fields": {
+      "tour": 2,
+      "start_date": "2026-05-20",
+      "end_date": "2026-05-25",
+      "available_spots": 6,
+      "is_active": true
+    }
+  },
+  {
+    "model": "tours.tourdate",
+    "pk": 4,
+    "fields": {
+      "tour": 3,
+      "start_date": "2026-06-01",
+      "end_date": "2026-06-06",
+      "available_spots": 8,
+      "is_active": true
+    }
+  },
+  {
+    "model": "tours.tourdate",
+    "pk": 5,
+    "fields": {
+      "tour": 4,
+      "start_date": "2026-07-01",
+      "end_date": "2026-07-06",
+      "available_spots": 14,
+      "is_active": true
+    }
+  },
+  {
+    "model": "tours.tourdate",
+    "pk": 6,
+    "fields": {
+      "tour": 5,
+      "start_date": "2026-04-10",
+      "end_date": "2026-04-16",
+      "available_spots": 12,
+      "is_active": true
+    }
+  },
+  {
+    "model": "tours.tourdate",
+    "pk": 7,
+    "fields": {
+      "tour": 6,
+      "start_date": "2026-08-05",
+      "end_date": "2026-08-12",
+      "available_spots": 4,
+      "is_active": true
+    }
+  }
+]
